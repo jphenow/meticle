@@ -37,15 +37,15 @@ function difficulty_box_content( $post_id ) {
 	// nonce field for all your meta boxes of same plugin
 	wp_nonce_field( plugin_basename( __FILE__ ), 'myplugin_nonce' );
 
-	add_post_meta( $post_id, 'difficulty_level', $level, true );
-	add_post_meta( $post_id, 'difficulty_platform_linux', $linux, true );
-	add_post_meta( $post_id, 'difficulty_platform_mac', $mac, true );
-	add_post_meta( $post_id, 'difficulty_platform_windows', $windows, true );
+	add_post_meta( $post_id, '_difficulty_level', $level, true );
+	add_post_meta( $post_id, '_difficulty_platform_linux', $linux, true );
+	add_post_meta( $post_id, '_difficulty_platform_mac', $mac, true );
+	add_post_meta( $post_id, '_difficulty_platform_windows', $windows, true );
 
-	$level   = get_post_meta( $post->ID, 'difficulty_level', true );
-	$linux   = get_post_meta( $post->ID, 'difficulty_platform_linux', true );
-	$mac     = get_post_meta( $post->ID, 'difficulty_platform_mac', true );
-	$windows = get_post_meta( $post->ID, 'difficulty_platform_windows', true );
+	$level   = get_post_meta( $post->ID, '_difficulty_level', true );
+	$linux   = get_post_meta( $post->ID, '_difficulty_platform_linux', true );
+	$mac     = get_post_meta( $post->ID, '_difficulty_platform_mac', true );
+	$windows = get_post_meta( $post->ID, '_difficulty_platform_windows', true );
 	
 	$linux_check   = "";
 	$mac_check     = "";
@@ -132,31 +132,31 @@ function custom_save_data( $post_id ) {
 		$windows = $_POST['difficluty_platform_windows'];
 		$level = $_POST['difficulty_level'];
 		if( $level ){
-			if( ! get_post_meta( $post_id, 'difficulty_level', true ) )
-				add_post_meta( $post_id, 'difficulty_level', $level, true );
+			if( ! get_post_meta( $post_id, '_difficulty_level', true ) )
+				add_post_meta( $post_id, '_difficulty_level', $level, true );
 			else
-				update_post_meta( $post_id, 'difficulty_level', $level );
+				update_post_meta( $post_id, '_difficulty_level', $level );
 		}
 
 		if( $linux ){
-			if( ! get_post_meta( $post_id, 'difficulty_platform_linux', true ) )
-				add_post_meta( $post_id, 'difficulty_platform_linux', $linux, true );
+			if( ! get_post_meta( $post_id, '_difficulty_platform_linux', true ) )
+				add_post_meta( $post_id, '_difficulty_platform_linux', $linux, true );
 			else
-				update_post_meta( $post_id, 'difficulty_platform_linux', $linux );
+				update_post_meta( $post_id, '_difficulty_platform_linux', $linux );
 		}
 
 		if( $mac ){
-			if( ! get_post_meta( $post_id, 'difficulty_platform_mac', true ) )
-				add_post_meta( $post_id, 'difficulty_platform_mac', $mac, true );
+			if( ! get_post_meta( $post_id, '_difficulty_platform_mac', true ) )
+				add_post_meta( $post_id, '_difficulty_platform_mac', $mac, true );
 			else
-				update_post_meta( $post_id, 'difficulty_platform_mac', $mac );
+				update_post_meta( $post_id, '_difficulty_platform_mac', $mac );
 		}
 
 		if( $windows ){
-			if( ! get_post_meta( $post_id, 'difficulty_platform_windows', true ) )
-				add_post_meta( $post_id, 'difficulty_platform_windows', $windows, true );
+			if( ! get_post_meta( $post_id, '_difficulty_platform_windows', true ) )
+				add_post_meta( $post_id, '_difficulty_platform_windows', $windows, true );
 			else
-				update_post_meta( $post_id, 'difficulty_platform_windows', $windows );
+				update_post_meta( $post_id, '_difficulty_platform_windows', $windows );
 		}
 	}
 }
@@ -164,10 +164,10 @@ function custom_save_data( $post_id ) {
 
 function inject( $str ) {
 	global $post;
-	$level             = get_post_meta( $post->ID, 'difficulty_level', true );
-	$linux             = get_post_meta( $post->ID, 'difficulty_platform_linux', true );
-	$mac               = get_post_meta( $post->ID, 'difficulty_platform_mac', true );
-	$windows           = get_post_meta( $post->ID, 'difficulty_platform_windows', true );
+	$level             = get_post_meta( $post->ID, '_difficulty_level', true );
+	$linux             = get_post_meta( $post->ID, '_difficulty_platform_linux', true );
+	$mac               = get_post_meta( $post->ID, '_difficulty_platform_mac', true );
+	$windows           = get_post_meta( $post->ID, '_difficulty_platform_windows', true );
 	$x                 = '';
 	switch( $level ) {
 		case "1":
@@ -186,7 +186,6 @@ function inject( $str ) {
 
 	$imgs = "";
 	if( $linux == "1" ){
-		echo "linux";
 		$imgs .= "Linux";
 	}
 	if( $mac == "1" ){
