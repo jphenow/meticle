@@ -10,5 +10,5 @@ Add icons to the top of each post specifying their difficulty in content and wha
 
 To use the plugin on a post add the custom fields: 
 
-* `difficulty` - Choices are 0-2, 0 being the lowest difficulty
+* `difficulty` - Choices are 1-3, 1 being the lowest difficulty
 * `platforms` - Includes Windows, Mac, and Linux (separate by commas)
