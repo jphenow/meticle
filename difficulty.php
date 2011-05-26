@@ -19,8 +19,6 @@
 // 	return $str;
 // }
 
-// register the meta box
-add_action( 'add_meta_boxes', 'difficulty_checkboxes' );
 function difficulty_checkboxes() {
 	add_meta_box(
 		'difficulty',          // this is HTML id of the box on edit screen
@@ -38,6 +36,11 @@ function difficulty_box_content( $post_id ) {
 	// nonce field for security check, you can have the same
 	// nonce field for all your meta boxes of same plugin
 	wp_nonce_field( plugin_basename( __FILE__ ), 'myplugin_nonce' );
+
+	add_post_meta( $post_id, 'difficulty_level', $level, true );
+	add_post_meta( $post_id, 'difficulty_platform_linux', $linux, true );
+	add_post_meta( $post_id, 'difficulty_platform_mac', $mac, true );
+	add_post_meta( $post_id, 'difficulty_platform_windows', $windows, true );
 
 	$level   = get_post_meta( $post->ID, 'difficulty_level', true );
 	$linux   = get_post_meta( $post->ID, 'difficulty_platform_linux', true );
@@ -64,19 +67,19 @@ function difficulty_box_content( $post_id ) {
 
 	switch( $level ){
 		case "1":
-			$level_1 = "checked";
+			$level_1 .= "checked";
 			break;
 		case "2":
-			$level_2 = "checked";
+			$level_2 .= "checked";
 			break;
 		case "3":
-			$level_3 = "checked";
+			$level_3 .= "checked";
 			break;
 		default:
-			$level_1 = "checked";
+			$level_0 .= "checked";
 			break;
 	}
-	echo '
+	echo "
 	<table>
 		<tr>
 			<td>
@@ -88,46 +91,74 @@ function difficulty_box_content( $post_id ) {
 		</tr>
 		<tr>
 			<td>
-				<input type = "checkbox" name = "difficulty_platform_linux" value   = "1" ' . $linux_check . ' /> Linux <br />
-				<input type = "checkbox" name = "difficulty_platform_mac" value     = "1" ' . $mac_check . ' /> Mac <br />
-				<input type = "checkbox" name = "difficulty_platform_windows" value = "1" ' . $windows_check . ' /> Windows <br />
+				<input type = 'checkbox' name = 'difficulty_platform_linux' value = '1' " . $linux_check . " /> Linux <br />
+				<input type = 'checkbox' name = 'difficulty_platform_mac' value = '1' " . $mac_check . " /> Mac <br />
+				<input type = 'checkbox' name = 'difficulty_platform_windows' value = '1' " . $windows_check . " /> Windows <br />
 			</td>
 			<td>
-				<input type = "radio" name = "difficulty_level" value = "1" id = "diff_1" ' .  $level_1 . ' /> Easy <br />
-				<input type = "radio" name = "difficulty_level" value = "2" id = "diff_2" ' .  $level_2 . ' /> Medium <br />
-				<input type = "radio" name = "difficulty_level" value = "3" id = "diff_3" ' .  $level_3 . ' /> Hard <br />
-				<input type = "radio" name = "difficulty_level" value = "0" id = "diff_0" ' .  $level_0 . ' /> None
+				<input type = 'radio' name = 'difficulty_level' value = '1' id = 'diff_1' " .  $level_1 . " /> Easy <br />
+				<input type = 'radio' name = 'difficulty_level' value = '2' id = 'diff_2' " .  $level_2 . " /> Medium <br />
+				<input type = 'radio' name = 'difficulty_level' value = '3' id = 'diff_3' " .  $level_3 . " /> Hard <br />
+				<input type = 'radio' name = 'difficulty_level' value = '0' id = 'diff_0' " .  $level_0 . " /> None
 			</td>
 		</tr>
 	</table>
-	';
+	";
 }
 
-// save data from checkboxes
-add_action( 'save_post', 'my_custom_field_data' );
-
-function my_custom_field_data() {
+function custom_save_data( $post_id ) {
 	global $post;
 	// check if this isn't an auto save
-	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
-		return;
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ){
+		return $post_id;
+	}
+	else{
+		// security check
+		if ( !wp_verify_nonce( $_POST['myplugin_nonce'], plugin_basename( __FILE__ ) ) ){
+			return;
+		}
+		
+		// called after a post or page is saved and not on autosave
+		if( $parent_id = wp_is_post_revision( $postID ) ){
+			$post_id = $parent_id;
+		}
 
-	// security check
-	if ( !wp_verify_nonce( $_POST['mypluing_nonce'], plugin_basename( __FILE__ ) ) )
-		return;
+		// further checks if you like,
+		// for example particular user, role or maybe post type in case of custom post types
 
-	// further checks if you like,
-	// for example particular user, role or maybe post type in case of custom post types
+		// now store data in custom fields based on checkboxes selected
+		$linux = $_POST['difficulty_platform_linux'];
+		$mac = $_POST['difficulty_platform_mac'];
+		$windows = $_POST['difficluty_platform_windows'];
+		$level = $_POST['difficulty_level'];
+		if( $level ){
+			if( ! get_post_meta( $post_id, 'difficulty_level', true ) )
+				add_post_meta( $post_id, 'difficulty_level', $level, true );
+			else
+				update_post_meta( $post_id, 'difficulty_level', $level );
+		}
 
-	// now store data in custom fields based on checkboxes selected
-	$linux = $_POST['difficulty_platform_linux'];
-	$mac = $_POST['difficulty_platform_mac'];
-	$windows = $_POST['difficluty_platform_windows'];
-	$level = $_POST['difficulty_level'];
-	update_post_meta( $post->ID, 'difficulty_platform_linux', $linux );
-	update_post_meta( $post->ID, 'difficulty_platform_mac', $mac );
-	update_post_meta( $post->ID, 'difficulty_platform_windows', $windows );
-	update_post_meta( $post->ID, 'difficulty_level', $level );
+		if( $linux ){
+			if( ! get_post_meta( $post_id, 'difficulty_platform_linux', true ) )
+				add_post_meta( $post_id, 'difficulty_platform_linux', $linux, true );
+			else
+				update_post_meta( $post_id, 'difficulty_platform_linux', $linux );
+		}
+
+		if( $mac ){
+			if( ! get_post_meta( $post_id, 'difficulty_platform_mac', true ) )
+				add_post_meta( $post_id, 'difficulty_platform_mac', $mac, true );
+			else
+				update_post_meta( $post_id, 'difficulty_platform_mac', $mac );
+		}
+
+		if( $windows ){
+			if( ! get_post_meta( $post_id, 'difficulty_platform_windows', true ) )
+				add_post_meta( $post_id, 'difficulty_platform_windows', $windows, true );
+			else
+				update_post_meta( $post_id, 'difficulty_platform_windows', $windows );
+		}
+	}
 }
 
 
@@ -155,6 +186,7 @@ function inject( $str ) {
 
 	$imgs = "";
 	if( $linux == "1" ){
+		echo "linux";
 		$imgs .= "Linux";
 	}
 	if( $mac == "1" ){
@@ -169,6 +201,12 @@ function inject( $str ) {
 }
 	
 add_action( 'the_content', 'inject' );
+
+// save data from checkboxes
+add_action( 'save_post', 'custom_save_data' );
+
+// register the meta box
+add_action( 'add_meta_boxes', 'difficulty_checkboxes' );
 
 /**
  * Also waiting for the implementation of a settings page.
