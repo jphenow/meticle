@@ -34,22 +34,23 @@ function difficulty_checkboxes() {
 
 // display the metabox
 function difficulty_box_content( $post_id ) {
+	global $post;
 	// nonce field for security check, you can have the same
 	// nonce field for all your meta boxes of same plugin
 	wp_nonce_field( plugin_basename( __FILE__ ), 'myplugin_nonce' );
 
-	$level = get_post_meta( $post->ID, 'difficulty_level', true );
-	$linux = get_post_meta( $post->ID, 'difficulty_platform_linux', true );
-	$mac = get_post_meta( $post->ID, 'difficulty_platform_mac', true );
+	$level   = get_post_meta( $post->ID, 'difficulty_level', true );
+	$linux   = get_post_meta( $post->ID, 'difficulty_platform_linux', true );
+	$mac     = get_post_meta( $post->ID, 'difficulty_platform_mac', true );
 	$windows = get_post_meta( $post->ID, 'difficulty_platform_windows', true );
 	
-	$linux_check = "";
-	$mac_check = "";
+	$linux_check   = "";
+	$mac_check     = "";
 	$windows_check = "";
-	$level_0 = "";
-	$level_1 = "";
-	$level_2 = "";
-	$level_3 = "";
+	$level_0       = "";
+	$level_1       = "";
+	$level_2       = "";
+	$level_3       = "";
 
 	if( $linux == "1" ){
 		$linux_check = "checked";
@@ -106,7 +107,7 @@ function difficulty_box_content( $post_id ) {
 add_action( 'save_post', 'my_custom_field_data' );
 
 function my_custom_field_data() {
-
+	global $post;
 	// check if this isn't an auto save
 	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
 		return;
@@ -123,26 +124,26 @@ function my_custom_field_data() {
 	$mac = $_POST['difficulty_platform_mac'];
 	$windows = $_POST['difficluty_platform_windows'];
 	$level = $_POST['difficulty_level'];
-	update_post_meta( $post_id, 'difficulty_platform_linux', $linux );
-	update_post_meta( $post_id, 'difficulty_platform_mac', $mac );
-	update_post_meta( $post_id, 'difficulty_platform_windows', $windows );
-	update_post_meta( $post_id, 'difficulty_level', $level );
+	update_post_meta( $post->ID, 'difficulty_platform_linux', $linux );
+	update_post_meta( $post->ID, 'difficulty_platform_mac', $mac );
+	update_post_meta( $post->ID, 'difficulty_platform_windows', $windows );
+	update_post_meta( $post->ID, 'difficulty_level', $level );
 }
 
 
 function inject( $str ) {
 	global $post;
-	$level = get_post_meta( $post->ID, 'difficulty_level', true );
-	$linux = get_post_meta( $post->ID, 'difficulty_platform_linux', true );
-	$mac = get_post_meta( $post->ID, 'difficulty_platform_mac', true );
-	$windows = get_post_meta( $post->ID, 'difficulty_platform_windows', true );
-	$x = '';
+	$level             = get_post_meta( $post->ID, 'difficulty_level', true );
+	$linux             = get_post_meta( $post->ID, 'difficulty_platform_linux', true );
+	$mac               = get_post_meta( $post->ID, 'difficulty_platform_mac', true );
+	$windows           = get_post_meta( $post->ID, 'difficulty_platform_windows', true );
+	$x                 = '';
 	switch( $level ) {
 		case "1":
 			$x = "level 1";
 			break;
-		case "2": 
-			$x = "level 2"; 
+		case "2":
+			$x = "level 2";
 			break;
 		case "3":
 			$x = "level 3";
