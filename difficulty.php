@@ -22,10 +22,18 @@
 function difficulty_checkboxes() {
 	add_meta_box(
 		'difficulty',          // this is HTML id of the box on edit screen
-		'Difficulty & Platforms Plugin',    // title of the box
+		'Platforms & Difficulty Plugin',    // title of the box
 		'difficulty_box_content',   // function to be called to display the checkboxes, see the function below
 		'post',        // on which edit screen the box should appear
-		'normal',      // part of page where the box should appear
+		'side',      // part of page where the box should appear
+		'default'      // priority of the box
+	);
+	add_meta_box(
+		'difficulty',          // this is HTML id of the box on edit screen
+		'Platforms & Difficulty Plugin',    // title of the box
+		'difficulty_box_content',   // function to be called to display the checkboxes, see the function below
+		'projects',        // on which edit screen the box should appear
+		'side',      // part of page where the box should appear
 		'default'      // priority of the box
 	);
 }
