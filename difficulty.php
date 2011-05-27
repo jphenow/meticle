@@ -163,13 +163,13 @@ function inject( $str ) {
 
 	$imgs = "";
 	if( $linux == "1" ){
-		$imgs .= "<img src = '/wp-content/plugins/difficulty/img/linux_32.png' /> ";
+		$imgs .= "<p><img title = 'Linux Compatible' src = '/wp-content/plugins/difficulty/img/linux_32.png' /> ";
 	}
 	if( $mac == "1" ){
-		$imgs .= "<img src = '/wp-content/plugins/difficulty/img/apple_32.png' /> ";
+		$imgs .= "<img title = 'Apple Compatible' src = '/wp-content/plugins/difficulty/img/apple_32.png' /> ";
 	}
 	if( $windows == "1" ){
-		$imgs .= "<img src = '/wp-content/plugins/difficulty/img/windows_32.png' /> ";
+		$imgs .= "<img title = 'Windows Compatible' src = '/wp-content/plugins/difficulty/img/windows_32.png' /></p> ";
 	}
 
 	$str = $x . $imgs . $str;
