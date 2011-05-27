@@ -129,7 +129,7 @@ function custom_save_data( $post_id ) {
 		// now store data in custom fields based on checkboxes selected
 		$linux = $_POST['difficulty_platform_linux'];
 		$mac = $_POST['difficulty_platform_mac'];
-		$windows = $_POST['difficluty_platform_windows'];
+		$windows = $_POST['difficulty_platform_windows'];
 		$level = $_POST['difficulty_level'];
 		if( $level ){
 			if( ! get_post_meta( $post_id, '_difficulty_level', true ) )
