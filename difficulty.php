@@ -166,7 +166,7 @@ function inject( $str ) {
 		$imgs .= "<p><img title = 'Linux Compatible' src = '/wp-content/plugins/difficulty/img/linux_32.png' /> ";
 	}
 	if( $mac == "1" ){
-		$imgs .= "<img title = 'Apple Compatible' src = '/wp-content/plugins/difficulty/img/apple_32.png' /> ";
+		$imgs .= "<img title = 'Mac OSX Compatible' src = '/wp-content/plugins/difficulty/img/apple_32.png' /> ";
 	}
 	if( $windows == "1" ){
 		$imgs .= "<img title = 'Windows Compatible' src = '/wp-content/plugins/difficulty/img/windows_32.png' /></p> ";
