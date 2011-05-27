@@ -131,33 +131,10 @@ function custom_save_data( $post_id ) {
 		$mac = $_POST['difficulty_platform_mac'];
 		$windows = $_POST['difficulty_platform_windows'];
 		$level = $_POST['difficulty_level'];
-		if( $level ){
-			if( ! get_post_meta( $post_id, '_difficulty_level', true ) )
-				add_post_meta( $post_id, '_difficulty_level', $level, true );
-			else
-				update_post_meta( $post_id, '_difficulty_level', $level );
-		}
-
-		if( $linux ){
-			if( ! get_post_meta( $post_id, '_difficulty_platform_linux', true ) )
-				add_post_meta( $post_id, '_difficulty_platform_linux', $linux, true );
-			else
-				update_post_meta( $post_id, '_difficulty_platform_linux', $linux );
-		}
-
-		if( $mac ){
-			if( ! get_post_meta( $post_id, '_difficulty_platform_mac', true ) )
-				add_post_meta( $post_id, '_difficulty_platform_mac', $mac, true );
-			else
-				update_post_meta( $post_id, '_difficulty_platform_mac', $mac );
-		}
-
-		if( $windows ){
-			if( ! get_post_meta( $post_id, '_difficulty_platform_windows', true ) )
-				add_post_meta( $post_id, '_difficulty_platform_windows', $windows, true );
-			else
-				update_post_meta( $post_id, '_difficulty_platform_windows', $windows );
-		}
+		update_post_meta( $post_id, '_difficulty_level', $level );
+		update_post_meta( $post_id, '_difficulty_platform_linux', $linux );
+		update_post_meta( $post_id, '_difficulty_platform_mac', $mac );
+		update_post_meta( $post_id, '_difficulty_platform_windows', $windows );
 	}
 }
 
@@ -186,16 +163,16 @@ function inject( $str ) {
 
 	$imgs = "";
 	if( $linux == "1" ){
-		$imgs .= "Linux";
+		$imgs .= "<img src = '/wp-content/plugins/difficulty/img/linux_32.png' /> ";
 	}
 	if( $mac == "1" ){
-		$imgs .= "Mac";
+		$imgs .= "<img src = '/wp-content/plugins/difficulty/img/apple_32.png' /> ";
 	}
 	if( $windows == "1" ){
-		$imgs .= "Windows";
+		$imgs .= "<img src = '/wp-content/plugins/difficulty/img/windows_32.png' /> ";
 	}
 
-	$str = "<p>" . $x . $imgs . "</p>" . $str;
+	$str = $x . $imgs . $str;
 	return $str;
 }
 	
