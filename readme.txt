@@ -8,7 +8,4 @@ Stable tag: 0.1
 Add icons to the top of each post specifying their difficulty in content and what platforms may apply.
 
 
-To use the plugin on a post add the custom fields: 
-
-* `difficulty` - Choices are 1-3, 1 being the lowest difficulty
-* `platforms` - Includes Windows, Mac, and Linux (separate by commas)
+To use the plugin on a post enable the plugin then use the meta box within the post.
