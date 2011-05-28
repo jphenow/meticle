@@ -3,7 +3,7 @@
  * Plugin Name: Difficulty
  * Plugin URI: http://github/jphenow/CHANGE
  * Description: A plugin for defining an article's difficulty and platform.
- * Version: 0.1
+ * Version: 0.2
  * Author: Jon Phenow
  * Author URI: http://jphenow.com
  * License: GPL2
@@ -197,18 +197,24 @@ function inject( $str ) {
 	// Insert the necessary html for checked platforms
 	$platform_html .= "<p><div>";
 	if( $linux == "1" ){
-		$platform_html .= "<img class = 'platform' title = 'Linux Compatible' src = '" . $PATH . "/img/linux_32.png' /> ";
+		$platform_html .= "<img class = 'vtip' title = 'Linux Compatible' src = '" . $PATH . "/img/linux_32.png' /> ";
 	}
 	if( $mac == "1" ){
-		$platform_html .= "<img class = 'platform' title = 'Mac OSX Compatible' src = '" . $PATH . "/img/apple_32.png' /> ";
+		$platform_html .= "<img class = 'vtip' title = 'Mac OSX Compatible' src = '" . $PATH . "/img/apple_32.png' /> ";
 	}
 	if( $windows == "1" ){
-		$platform_html .= "<img class = 'platform' title = 'Windows Compatible' src = '" . $PATH . "/img/windows_32.png' /> ";
+		$platform_html .= "<img class = 'vtip' title = 'Windows Compatible' src = '" . $PATH . "/img/windows_32.png' /> ";
 	}
 	$platform_html.= "</div></p>";
 
+	// TODO Make optional
+	$stylejs = "
+		<link type = 'text/css' rel='stylesheet' href='" . $PATH . "/script/css/vtip.css' />
+		<script type = 'text/javascript' src='" . $PATH . "/script/vtip-min.js' ></script>
+	";
+
 	// concat all the strings we've worked with and incorporate them with original 'the_content' text
-	$str = $level_html . $platform_html . $str;
+	$str = $level_html . $stylejs . $platform_html . $str;
 	return $str;
 }
 	
