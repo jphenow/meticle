@@ -19,7 +19,13 @@
 // 	return $str;
 // }
 
+/**
+ * Function that specifies basic parameters for creating meta box for post and project types
+ * TODO move much of the values to paramaterized variables.
+ * TODO Modularize and add a settings page so we can add our own images and checkbox choices
+ */
 function difficulty_checkboxes() {
+	// Post meta box
 	add_meta_box(
 		'difficulty',          // this is HTML id of the box on edit screen
 		'Platforms & Difficulty Plugin',    // title of the box
@@ -28,6 +34,7 @@ function difficulty_checkboxes() {
 		'side',      // part of page where the box should appear
 		'default'      // priority of the box
 	);
+	// Project meta box
 	add_meta_box(
 		'difficulty',          // this is HTML id of the box on edit screen
 		'Platforms & Difficulty Plugin',    // title of the box
@@ -38,23 +45,28 @@ function difficulty_checkboxes() {
 	);
 }
 
-// display the metabox
+/**
+ * Fill in the meta box with check boxes and radio buttons
+ */
 function difficulty_box_content( $post_id ) {
 	global $post;
 	// nonce field for security check, you can have the same
 	// nonce field for all your meta boxes of same plugin
-	wp_nonce_field( plugin_basename( __FILE__ ), 'myplugin_nonce' );
+	wp_nonce_field( plugin_basename( __FILE__ ), 'difficulty_nonce' );
 
+	// Adds all the invisible meta fields for necessary data - only adds if doesn't already exist so mostly a check
 	add_post_meta( $post_id, '_difficulty_level', $level, true );
 	add_post_meta( $post_id, '_difficulty_platform_linux', $linux, true );
 	add_post_meta( $post_id, '_difficulty_platform_mac', $mac, true );
 	add_post_meta( $post_id, '_difficulty_platform_windows', $windows, true );
 
+	// Grabs all of the data from the meta fields
 	$level   = get_post_meta( $post->ID, '_difficulty_level', true );
 	$linux   = get_post_meta( $post->ID, '_difficulty_platform_linux', true );
 	$mac     = get_post_meta( $post->ID, '_difficulty_platform_mac', true );
 	$windows = get_post_meta( $post->ID, '_difficulty_platform_windows', true );
 	
+	// Initialize empty strings so we can specify the inputs as "checked" so they don't appear reset after reloading an edit post page
 	$linux_check   = "";
 	$mac_check     = "";
 	$windows_check = "";
@@ -62,31 +74,36 @@ function difficulty_box_content( $post_id ) {
 	$level_1       = "";
 	$level_2       = "";
 	$level_3       = "";
+	$c = "checked";
 
+	// Check if the past data lists any as previously selected if so make the value "checked"
 	if( $linux == "1" ){
-		$linux_check = "checked";
+		$linux_check = $c;
 	}
 	if( $mac == "1" ){
-		$mac_check = "checked";
+		$mac_check = $c;
 	}
 	if( $windows == "1" ){
-		$windows_check = "checked";
+		$windows_check = $c;
 	}
 
+	// Check with radio button was selected from previous data and set that variable as "checked"
 	switch( $level ){
 		case "1":
-			$level_1 .= "checked";
+			$level_1 .= $c;
 			break;
 		case "2":
-			$level_2 .= "checked";
+			$level_2 .= $c;
 			break;
 		case "3":
-			$level_3 .= "checked";
+			$level_3 .= $c;
 			break;
 		default:
-			$level_0 .= "checked";
+			$level_0 .= $c;
 			break;
 	}
+
+	// Create our html meta box with the correct fields checked
 	echo "
 	<table>
 		<tr>
@@ -114,6 +131,9 @@ function difficulty_box_content( $post_id ) {
 	";
 }
 
+/**
+ * Save our meta box data into invisble meta fields on either Autosave or update
+ */
 function custom_save_data( $post_id ) {
 	global $post;
 	// check if this isn't an auto save
@@ -121,8 +141,8 @@ function custom_save_data( $post_id ) {
 		return $post_id;
 	}
 	else{
-		// security check
-		if ( !wp_verify_nonce( $_POST['myplugin_nonce'], plugin_basename( __FILE__ ) ) ){
+		// security check with nonce created in difficulty_box_content()
+		if ( !wp_verify_nonce( $_POST['difficulty_nonce'], plugin_basename( __FILE__ ) ) ){
 			return;
 		}
 		
@@ -131,10 +151,7 @@ function custom_save_data( $post_id ) {
 			$post_id = $parent_id;
 		}
 
-		// further checks if you like,
-		// for example particular user, role or maybe post type in case of custom post types
-
-		// now store data in custom fields based on checkboxes selected
+		// now store data in custom fields based on checkboxes/radios selected
 		$linux = $_POST['difficulty_platform_linux'];
 		$mac = $_POST['difficulty_platform_mac'];
 		$windows = $_POST['difficulty_platform_windows'];
@@ -146,44 +163,56 @@ function custom_save_data( $post_id ) {
 	}
 }
 
-
+/**
+ * Independently checks the simple values of each meta and if there's a match it fills variables with basic html to include images on the post
+ */
 function inject( $str ) {
 	global $post;
+	// grab data
 	$level             = get_post_meta( $post->ID, '_difficulty_level', true );
 	$linux             = get_post_meta( $post->ID, '_difficulty_platform_linux', true );
 	$mac               = get_post_meta( $post->ID, '_difficulty_platform_mac', true );
 	$windows           = get_post_meta( $post->ID, '_difficulty_platform_windows', true );
-	$x                 = '';
+	$level_html    = '';
+	$platform_html = '';
+
+	$PATH = "/wp-content/plugins/difficulty";
+
+	// fill in $level_html based on the data in level meta
 	switch( $level ) {
 		case "1":
-			$x = "level 1";
+			$level_html = "level 1";
 			break;
 		case "2":
-			$x = "level 2";
+			$level_html = "level 2";
 			break;
 		case "3":
-			$x = "level 3";
+			$level_html = "level 3";
 			break;
 		default:
-			$x = "";
+			$level_html = "";
 			break;
 	}
 
-	$imgs = "";
+	// Insert the necessary html for checked platforms
+	$platform_html .= "<p><div>";
 	if( $linux == "1" ){
-		$imgs .= "<p><img title = 'Linux Compatible' src = '/wp-content/plugins/difficulty/img/linux_32.png' /> ";
+		$platform_html .= "<img class = 'platform' title = 'Linux Compatible' src = '" . $PATH . "/img/linux_32.png' /> ";
 	}
 	if( $mac == "1" ){
-		$imgs .= "<img title = 'Mac OSX Compatible' src = '/wp-content/plugins/difficulty/img/apple_32.png' /> ";
+		$platform_html .= "<img class = 'platform' title = 'Mac OSX Compatible' src = '" . $PATH . "/img/apple_32.png' /> ";
 	}
 	if( $windows == "1" ){
-		$imgs .= "<img title = 'Windows Compatible' src = '/wp-content/plugins/difficulty/img/windows_32.png' /></p> ";
+		$platform_html .= "<img class = 'platform' title = 'Windows Compatible' src = '" . $PATH . "/img/windows_32.png' /> ";
 	}
+	$platform_html.= "</div></p>";
 
-	$str = $x . $imgs . $str;
+	// concat all the strings we've worked with and incorporate them with original 'the_content' text
+	$str = $level_html . $platform_html . $str;
 	return $str;
 }
 	
+// inject our data into 'the_content'
 add_action( 'the_content', 'inject' );
 
 // save data from checkboxes
