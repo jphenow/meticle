@@ -210,7 +210,6 @@ function inject( $str ) {
 	// TODO Make optional
 	$stylejs = "
 		<link type = 'text/css' rel='stylesheet' href='" . $PATH . "/script/css/vtip.css' />
-		<script type = 'text/javascript' src='" . $PATH . "/script/jquery.js' ></script>
 		<script type = 'text/javascript' src='" . $PATH . "/script/vtip-min.js' ></script>
 	";
 
