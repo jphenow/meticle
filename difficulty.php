@@ -147,7 +147,7 @@ function custom_save_data( $post_id ) {
 		}
 		
 		// called after a post or page is saved and not on autosave
-		if( $parent_id = wp_is_post_revision( $postID ) ){
+		if( $parent_id = wp_is_post_revision( $post_id ) ){
 			$post_id = $parent_id;
 		}
 
