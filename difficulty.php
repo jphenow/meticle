@@ -3,7 +3,7 @@
  * Plugin Name: Difficulty
  * Plugin URI: http://github/jphenow/CHANGE
  * Description: A plugin for defining an article's difficulty and platform.
- * Version: 0.2
+ * Version: 0.1
  * Author: Jon Phenow
  * Author URI: http://jphenow.com
  * License: GPL2
