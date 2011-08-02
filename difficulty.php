@@ -197,27 +197,42 @@ function inject( $str ) {
 	// Insert the necessary html for checked platforms
 	$platform_html .= "<p><div>";
 	if( $linux == "1" ){
-		$platform_html .= "<img class = 'vtip' title = 'Linux Compatible' src = '" . $PATH . "/img/linux_32.png' /> ";
+		$platform_html .= "<img title = 'Linux Compatible' src = '" . $PATH . "/img/linux_32.png' /> ";
 	}
 	if( $mac == "1" ){
-		$platform_html .= "<img class = 'vtip' title = 'Mac OSX Compatible' src = '" . $PATH . "/img/apple_32.png' /> ";
+		$platform_html .= "<img title = 'Mac OSX Compatible' src = '" . $PATH . "/img/apple_32.png' /> ";
 	}
 	if( $windows == "1" ){
-		$platform_html .= "<img class = 'vtip' title = 'Windows Compatible' src = '" . $PATH . "/img/windows_32.png' /> ";
+		$platform_html .= "<img title = 'Windows Compatible' src = '" . $PATH . "/img/windows_32.png' /> ";
 	}
 	$platform_html.= "</div></p>";
 
 	// TODO Make optional
-	$stylejs = "
-		<link type = 'text/css' rel='stylesheet' href='" . $PATH . "/script/css/vtip.css' />
-		<script type = 'text/javascript' src='" . $PATH . "/script/vtip-min.js' ></script>
-	";
+	//wp_enqueue_script('difficulty_tools',
+	//	plugins_url('/script/jquery.tools.min.js', __FILE__) // where the this file is in /someplugin/
+	//);
 
 	// concat all the strings we've worked with and incorporate them with original 'the_content' text
-	$str = $level_html . $stylejs . $platform_html . $str;
+	$str = $level_html . "\n" . $platform_html . "\n" . $str;
 	return $str;
 }
 	
+function prep( ) {
+	wp_enqueue_script('jquery');
+}
+
+function scripts( ){
+	?> <script type="text/javascript" src="<?php get_bloginfo('wpurl');?>/wp-content/plugins/difficulty/script/jquery.tools.min.js"></script>
+	<script type="text/javascript">
+		var $j = jQuery.noConflict();
+		$j(function( ){
+			$j("img[title]").tooltip();
+		});
+													
+	</script>
+	<link rel=StyleSheet href = "<?php get_bloginfo('wpurl');?>/wp-content/plugins/difficulty/style.css" type="text/css" />
+	<?php
+}
 // inject our data into 'the_content'
 add_action( 'the_content', 'inject' );
 
@@ -226,6 +241,10 @@ add_action( 'save_post', 'custom_save_data' );
 
 // register the meta box
 add_action( 'add_meta_boxes', 'difficulty_checkboxes' );
+
+add_action( 'wp_head', 'prep' );
+
+add_action( 'wp_footer', 'scripts' );
 
 /**
  * Also waiting for the implementation of a settings page.
