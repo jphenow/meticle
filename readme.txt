@@ -1,5 +1,5 @@
-WP-Difficulty-and-Platform
---------------------------
+=== WP-Difficulty-and-Platform ===
+
 Contributors: jphenow
 Tags: TODO
 Requires at least: 3.1
