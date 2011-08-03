@@ -1,23 +1,13 @@
 <?php
 /*
  * Plugin Name: Difficulty
- * Plugin URI: http://github/jphenow/CHANGE
+ * Plugin URI: http://github/jphenow/WP-Difficulty-and-Platform
  * Description: A plugin for defining an article's difficulty and platform.
- * Version: 0.1
+ * Version: 0.2
  * Author: Jon Phenow
  * Author URI: http://jphenow.com
  * License: GPL2
  */
-
-/**
- * Saving for when I include a settings page.
- */
-// function field_setup( $str ) {
-// 	global $post;
-// 	add_post_meta( $post->ID, 'difficulty', 1, true );
-// 	add_post_meta( $post->ID, 'platforms', "All", true );
-// 	return $str;
-// }
 
 /**
  * Function that specifies basic parameters for creating meta box for post and project types
@@ -104,7 +94,7 @@ function difficulty_box_content( $post_id ) {
 	}
 
 	// Create our html meta box with the correct fields checked
-	echo "
+	?>
 	<table>
 		<tr>
 			<td>
@@ -116,19 +106,19 @@ function difficulty_box_content( $post_id ) {
 		</tr>
 		<tr>
 			<td>
-				<input type = 'checkbox' name = 'difficulty_platform_linux' value = '1' " . $linux_check . " /> Linux <br />
-				<input type = 'checkbox' name = 'difficulty_platform_mac' value = '1' " . $mac_check . " /> Mac <br />
-				<input type = 'checkbox' name = 'difficulty_platform_windows' value = '1' " . $windows_check . " /> Windows <br />
+				<input type = 'checkbox' name = 'difficulty_platform_linux' value = '1' <?php echo $linux_check ?> /> Linux <br />
+				<input type = 'checkbox' name = 'difficulty_platform_mac' value = '1' <?php echo $mac_check ?> /> Mac <br />
+				<input type = 'checkbox' name = 'difficulty_platform_windows' value = '1' <?php echo $windows_check ?> /> Windows <br />
 			</td>
 			<td>
-				<input type = 'radio' name = 'difficulty_level' value = '1' id = 'diff_1' " .  $level_1 . " /> Easy <br />
-				<input type = 'radio' name = 'difficulty_level' value = '2' id = 'diff_2' " .  $level_2 . " /> Medium <br />
-				<input type = 'radio' name = 'difficulty_level' value = '3' id = 'diff_3' " .  $level_3 . " /> Hard <br />
-				<input type = 'radio' name = 'difficulty_level' value = '0' id = 'diff_0' " .  $level_0 . " /> None
+				<input type = 'radio' name = 'difficulty_level' value = '1' id = 'diff_1'  <?php echo $level_1 ?>  /> Easy <br />
+				<input type = 'radio' name = 'difficulty_level' value = '2' id = 'diff_2'  <?php echo $level_2 ?>  /> Medium <br />
+				<input type = 'radio' name = 'difficulty_level' value = '3' id = 'diff_3'  <?php echo $level_3 ?>  /> Hard <br />
+				<input type = 'radio' name = 'difficulty_level' value = '0' id = 'diff_0'  <?php echo $level_0 ?>  /> None
 			</td>
 		</tr>
 	</table>
-	";
+	<?php
 }
 
 /**
@@ -176,8 +166,6 @@ function inject( $str ) {
 	$level_html    = '';
 	$platform_html = '';
 
-	$PATH = "/wp-content/plugins/difficulty";
-
 	// fill in $level_html based on the data in level meta
 	switch( $level ) {
 		case "1":
@@ -197,27 +185,40 @@ function inject( $str ) {
 	// Insert the necessary html for checked platforms
 	$platform_html .= "<p><div>";
 	if( $linux == "1" ){
-		$platform_html .= "<img class = 'vtip' title = 'Linux Compatible' src = '" . $PATH . "/img/linux_32.png' /> ";
+		$platform_html .= "<img title = 'Linux Compatible' src = '" . plugins_url('img/linux_32.png', __FILE__ ) . "' /> ";
 	}
 	if( $mac == "1" ){
-		$platform_html .= "<img class = 'vtip' title = 'Mac OSX Compatible' src = '" . $PATH . "/img/apple_32.png' /> ";
+		$platform_html .= "<img title = 'Mac OSX Compatible' src = '" . plugins_url('img/apple_32.png' , __FILE__ ) . "' /> ";
 	}
 	if( $windows == "1" ){
-		$platform_html .= "<img class = 'vtip' title = 'Windows Compatible' src = '" . $PATH . "/img/windows_32.png' /> ";
+		$platform_html .= "<img title = 'Windows Compatible' src = '" . plugins_url('img/windows_32.png', __FILE__ ). "' /> ";
 	}
 	$platform_html.= "</div></p>";
 
-	// TODO Make optional
-	$stylejs = "
-		<link type = 'text/css' rel='stylesheet' href='" . $PATH . "/script/css/vtip.css' />
-		<script type = 'text/javascript' src='" . $PATH . "/script/vtip-min.js' ></script>
-	";
-
 	// concat all the strings we've worked with and incorporate them with original 'the_content' text
-	$str = $level_html . $stylejs . $platform_html . $str;
+	$str = $level_html . "\n" . $platform_html . "\n" . $str;
 	return $str;
 }
 	
+function prep( ) {
+	wp_enqueue_script('jquery');
+}
+
+function scripts( ){?> 
+	<script type="text/javascript" src="<?php echo plugins_url('script/jquery.tools.min.js', __FILE__ );?>"></script>
+	<script type="text/javascript">
+		var $j = jQuery.noConflict();
+		$j(function( ){
+			$j("img[title]").tooltip({
+				effect: "fade",
+				opacity: 0.75
+			});
+		});
+													
+	</script>
+	<link rel=StyleSheet href = "<?php echo plugins_url( 'style.css', __FILE__ ); ?>" type="text/css" />
+	<?php
+}
 // inject our data into 'the_content'
 add_action( 'the_content', 'inject' );
 
@@ -227,10 +228,10 @@ add_action( 'save_post', 'custom_save_data' );
 // register the meta box
 add_action( 'add_meta_boxes', 'difficulty_checkboxes' );
 
-/**
- * Also waiting for the implementation of a settings page.
- */
-//add_action( 'content_edit_pre', 'field_setup' );
+// Check that jQuery Loaded in Header
+add_action( 'wp_head', 'prep' );
 
+// Final insert of our plugin script and css
+add_action( 'wp_footer', 'scripts' );
 
 ?>
