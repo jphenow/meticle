@@ -1,10 +1,10 @@
 /* tooltip styling. by default the element to be styled is .tooltip  */
 .tooltip {
 	display:none;
-	background:transparent url('script/images/black_arrow.png');
+	background:transparent url('img/black_arrow.png');
 	font-size:12px;
-	height:70px;
+	height:55px;
 	width:160px;
-	padding:25px;
+	padding:25px 25px 0px 25px;
 	color:#fff;	
 }

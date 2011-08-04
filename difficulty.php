@@ -205,7 +205,7 @@ function prep( ) {
 }
 
 function scripts( ){?> 
-	<script type="text/javascript" src="<?php echo plugins_url('script/jquery.tools.min.js', __FILE__ );?>"></script>
+	<script type="text/javascript" src="<?php echo plugins_url('jquery.tools.min.js', __FILE__ );?>"></script>
 	<script type="text/javascript">
 		var $j = jQuery.noConflict();
 		$j(function( ){
