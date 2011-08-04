@@ -185,13 +185,13 @@ function inject( $str ) {
 	// Insert the necessary html for checked platforms
 	$platform_html .= "<p><div>";
 	if( $linux == "1" ){
-		$platform_html .= "<img title = 'Linux Compatible' src = '" . plugins_url('img/linux_32.png', __FILE__ ) . "' /> ";
+		$platform_html .= "<img class='wp_plugin_difficulty' title='Linux Compatible' src='" . plugins_url('img/linux_32.png', __FILE__ ) . "' /> ";
 	}
 	if( $mac == "1" ){
-		$platform_html .= "<img title = 'Mac OSX Compatible' src = '" . plugins_url('img/apple_32.png' , __FILE__ ) . "' /> ";
+		$platform_html .= "<img class='wp_plugin_difficulty' title='Mac OSX Compatible' src='" . plugins_url('img/apple_32.png' , __FILE__ ) . "' /> ";
 	}
 	if( $windows == "1" ){
-		$platform_html .= "<img title = 'Windows Compatible' src = '" . plugins_url('img/windows_32.png', __FILE__ ). "' /> ";
+		$platform_html .= "<img class='wp_plugin_difficulty' title='Windows Compatible' src='" . plugins_url('img/windows_32.png', __FILE__ ). "' /> ";
 	}
 	$platform_html.= "</div></p>";
 
@@ -209,7 +209,7 @@ function scripts( ){?>
 	<script type="text/javascript">
 		var $j = jQuery.noConflict();
 		$j(function( ){
-			$j("img[title]").tooltip({
+			$j("img.wp_plugin_difficulty[title]").tooltip({
 				effect: "fade",
 				opacity: 0.75
 			});
