@@ -1,17 +1,19 @@
-=== WP-Difficulty-and-Platform ===
+=== Meticle ===
 
 Contributors: jphenow
-Tags: TODO
+Tags: Meta
 Requires at least: 3.1
 Tested up to: 3.1
-Stable tag: 0.2.1
+Stable tag: 0.2.2
 
-Add icons to the top of each post specifying their difficulty in content and what platforms may apply.
-
+Add icons to the top of each post to add meta info for readers
 
 To use the plugin on a post enable the plugin then use the meta box within the post.
 
 == Changelog ==
+
+= 0.2.2 =
+* Name change
 
 = 0.2.1 =
 * Seemed silly to create a whole new release version
